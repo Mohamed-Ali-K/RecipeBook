@@ -21,19 +21,23 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: RecipeStartComponent
+        component: RecipeStartComponent,
       },
       {
         path: 'list',
         component: RecipeListComponent,
       },
       {
-        path: ':id/edit',
+        path: 'new',
         component: RecipeEditComponent,
       },
       {
         path: ':id',
         component: RecipeDetailComponent,
+      },
+      {
+        path: ':id/edit',
+        component: RecipeEditComponent,
       },
     ],
   },
