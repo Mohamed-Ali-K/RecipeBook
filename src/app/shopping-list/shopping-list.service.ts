@@ -13,13 +13,24 @@ export class ShoppingListService {
     new Ingredient('Tomatoes', 10),
   ];
   constructor() {}
-  getIngredient() {
+
+
+  getIngredients() {
     return [...this.ingredients];
   }
+
+
+  getIngredient(index: number) {
+    return this.ingredients[index];
+  }
+
+
   addIngredient(ingredient: Ingredient) {
     this.ingredients.push(ingredient);
     this.ingredientsChanged.next([...this.ingredients]);
   }
+
+
   addIngredients(ingredients: Ingredient[]) {
     this.ingredients.push(...ingredients);
 
