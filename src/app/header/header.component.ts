@@ -11,4 +11,7 @@ export class HeaderComponent {
   onSaveDate() {
     this.storageService.storeRecipe();
   }
+  onFeatchDate() {
+    this.storageService.featchRecipe();
+  }
 }

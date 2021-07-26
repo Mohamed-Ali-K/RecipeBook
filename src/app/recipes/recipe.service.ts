@@ -30,6 +30,10 @@ export class RecipeService {
     return this.recipes[index];
   }
 
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
+    this.recipesChanged.next([...this.recipes]);
+  }
   addRecipe(recipe: Recipe) {
    this.recipes.push(recipe);
    this.recipesChanged.next([...this.recipes])
