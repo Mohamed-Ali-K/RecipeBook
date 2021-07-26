@@ -22,6 +22,7 @@ export class RecipeService {
       [new Ingredient('Buns', 2), new Ingredient('Meat', 1)]
     ),
   ];
+  // private recipes: Recipe[] = [];
   constructor() {}
   getRecipes() {
     return [...this.recipes];
