@@ -12,6 +12,6 @@ export class HeaderComponent {
     this.storageService.storeRecipe();
   }
   onFeatchDate() {
-    this.storageService.featchRecipe();
+    this.storageService.featchRecipe().subscribe();
   }
 }
