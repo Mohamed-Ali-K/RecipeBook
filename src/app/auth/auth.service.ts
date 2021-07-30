@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/Operators';
 import { environment } from 'src/environments/environment';
+import { User } from './user.model';
 
 export interface AuthResponseData {
   idToken: string;
@@ -17,6 +18,7 @@ export interface AuthResponseData {
   providedIn: 'root',
 })
 export class AuthService {
+  user = new Subject<User>();
   constructor(private http: HttpClient) {}
 
   SignUp(email: string, password: string) {
@@ -29,7 +31,17 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(catchError(this.handelErro));
+      .pipe(
+        catchError(this.handelErro),
+        tap((resData) => {
+          this.handelAuthentication(
+            resData.email,
+            resData.localId,
+            resData.idToken,
+            +resData.expiresIn
+          );
+        })
+      );
   }
   Login(email: string, password: string) {
     return this.http
@@ -41,9 +53,26 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(catchError(this.handelErro));
+      .pipe(catchError(this.handelErro),
+      tap((resData) => {
+        this.handelAuthentication(
+          resData.email,
+          resData.localId,
+          resData.idToken,
+          +resData.expiresIn
+        );
+      }));
   }
-
+  private handelAuthentication(
+    email: string,
+    localId: string,
+    token: string,
+    expiresIn: number
+  ) {
+    const exprationDate = new Date(new Date().getTime() + +expiresIn * 1000);
+    const user = new User(email, localId, token, exprationDate);
+    this.user.next(user);
+  }
   private handelErro(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
     if (!errorRes.error || !errorRes.error.error) {
