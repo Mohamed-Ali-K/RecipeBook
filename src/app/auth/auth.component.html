@@ -41,7 +41,7 @@
         </button>
         |
         <button class="btn btn-primary" (click)="onSwitchMode()" type="button">
-          {{ isLoginMode ? "Switch to Login" : "Switch to Sign Up" }}
+          {{ !isLoginMode ? "Switch to Login" : "Switch to Sign Up" }}
         </button>
       </div>
     </form>
