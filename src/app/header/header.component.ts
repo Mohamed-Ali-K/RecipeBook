@@ -26,6 +26,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onFeatchDate() {
     this.storageService.featchRecipe().subscribe();
   }
+
+  onLogOut () {
+    this.authservice.logOut();
+  }
   ngOnDestroy() {
     this.userSub.unsubscribe();
   }

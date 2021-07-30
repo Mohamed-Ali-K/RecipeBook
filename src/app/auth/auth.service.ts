@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/Operators';
 import { environment } from 'src/environments/environment';
@@ -20,10 +21,7 @@ export interface AuthResponseData {
 export class AuthService {
   user = new BehaviorSubject<User>(null!);
 
-
-
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   SignUp(email: string, password: string) {
     return this.http
@@ -57,19 +55,23 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(catchError(this.handelErro),
-      tap((resData) => {
-        this.handelAuthentication(
-          resData.email,
-          resData.localId,
-          resData.idToken,
-          +resData.expiresIn
-        );
-      }));
+      .pipe(
+        catchError(this.handelErro),
+        tap((resData) => {
+          this.handelAuthentication(
+            resData.email,
+            resData.localId,
+            resData.idToken,
+            +resData.expiresIn
+          );
+        })
+      );
   }
 
-
-
+  logOut() {
+    this.user.next(null!);
+    this.router.navigate(['/auth'])
+  }
 
   private handelAuthentication(
     email: string,
