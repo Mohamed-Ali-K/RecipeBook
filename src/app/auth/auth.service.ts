@@ -19,6 +19,9 @@ export interface AuthResponseData {
 })
 export class AuthService {
   user = new Subject<User>();
+
+
+
   constructor(private http: HttpClient) {}
 
   SignUp(email: string, password: string) {
@@ -63,6 +66,10 @@ export class AuthService {
         );
       }));
   }
+
+
+
+
   private handelAuthentication(
     email: string,
     localId: string,
