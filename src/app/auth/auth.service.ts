@@ -68,9 +68,30 @@ export class AuthService {
       );
   }
 
+  autoLogin() {
+    const userData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem('userData') as string);
+    if (!userData) {
+      return;
+    }
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    );
+    if (loadedUser.token) {
+      this.user.next(loadedUser);
+    }
+  }
   logOut() {
     this.user.next(null!);
-    this.router.navigate(['/auth'])
+    localStorage.removeItem('userData')
+    this.router.navigate(['/auth']);
   }
 
   private handelAuthentication(
@@ -82,6 +103,7 @@ export class AuthService {
     const exprationDate = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new User(email, localId, token, exprationDate);
     this.user.next(user);
+    localStorage.setItem('userData', JSON.stringify(user));
   }
   private handelErro(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
