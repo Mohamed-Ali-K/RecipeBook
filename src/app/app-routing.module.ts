@@ -10,6 +10,7 @@ import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.com
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipesResolver } from './recipes/recipes.resolver';
 import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   {
@@ -19,10 +20,11 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    component: AuthComponent
+    component: AuthComponent,
   },
   {
     path: 'recipes',
+    canActivate: [AuthGuard],
     component: RecipesComponent,
     children: [
       {
@@ -39,11 +41,13 @@ const routes: Routes = [
       },
       {
         path: ':id',
-        component: RecipeDetailComponent, resolve:[ RecipesResolver]
+        component: RecipeDetailComponent,
+        resolve: [RecipesResolver],
       },
       {
         path: ':id/edit',
-        component: RecipeEditComponent, resolve: [RecipesResolver]
+        component: RecipeEditComponent,
+        resolve: [RecipesResolver],
       },
     ],
   },
