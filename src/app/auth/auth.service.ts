@@ -20,7 +20,7 @@ export interface AuthResponseData {
 })
 export class AuthService {
   user = new BehaviorSubject<User>(null!);
-
+  private tokenExpirationTimer: any;
   constructor(private http: HttpClient, private router: Router) {}
 
   SignUp(email: string, password: string) {
@@ -86,14 +86,25 @@ export class AuthService {
     );
     if (loadedUser.token) {
       this.user.next(loadedUser);
+      const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime()
+      this.autoLogOut(expirationDuration);
     }
   }
   logOut() {
     this.user.next(null!);
-    localStorage.removeItem('userData')
+    localStorage.removeItem('userData');
     this.router.navigate(['/auth']);
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer)
+    }
+    this.tokenExpirationTimer = null;
   }
 
+  autoLogOut(experationDuration: number) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logOut();
+    }, experationDuration);
+  }
   private handelAuthentication(
     email: string,
     localId: string,
@@ -103,6 +114,7 @@ export class AuthService {
     const exprationDate = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new User(email, localId, token, exprationDate);
     this.user.next(user);
+    this.autoLogOut(expiresIn * 1000)
     localStorage.setItem('userData', JSON.stringify(user));
   }
   private handelErro(errorRes: HttpErrorResponse) {
