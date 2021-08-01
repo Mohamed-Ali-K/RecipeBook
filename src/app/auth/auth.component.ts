@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { Form, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { AlertComponent } from '../shared/alert/alert.component';
 import { AuthResponseData, AuthService } from './auth.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class AuthComponent implements OnInit {
   isLoading = false;
   error!: string;
   signUpSub = Subscription;
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit(): void {}
   onSwitchMode() {
@@ -42,6 +43,7 @@ export class AuthComponent implements OnInit {
       (errorMessage) => {
         console.log(errorMessage);
         this.error = errorMessage;
+        this.showErrorAlert(errorMessage);
         this.isLoading = false;
       }
     );
@@ -49,5 +51,10 @@ export class AuthComponent implements OnInit {
   }
   onHandelError() {
     this.error = null!;
+  }
+
+  private showErrorAlert(message : string){
+   const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+
   }
 }
