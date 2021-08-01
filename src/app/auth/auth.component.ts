@@ -1,4 +1,10 @@
-import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Form, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -15,9 +21,14 @@ export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode = true;
   isLoading = false;
   error!: string;
-  @ViewChild(PlaceholderDirective, {static: false}) alerHost!: PlaceholderDirective;
-  componentRefSub! : Subscription;
-  constructor(private authService: AuthService, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) {}
+  @ViewChild(PlaceholderDirective, { static: false })
+  alerHost!: PlaceholderDirective;
+  componentRefSub!: Subscription;
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {}
 
   ngOnInit(): void {}
   onSwitchMode() {
@@ -40,7 +51,7 @@ export class AuthComponent implements OnInit, OnDestroy {
       (response) => {
         console.log(response);
         this.isLoading = false;
-        this.router.navigate(['/recipes'])
+        this.router.navigate(['/recipes']);
       },
       (errorMessage) => {
         console.log(errorMessage);
@@ -55,19 +66,24 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.error = null!;
   }
 
-  private showErrorAlert(message : string){
-   const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+  private showErrorAlert(message: string) {
+    const alertComponentFactory =
+      this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
     const hostViewContainerRef = this.alerHost.viewContainerRef;
     hostViewContainerRef.clear();
 
-    const componentRef = hostViewContainerRef.createComponent(alertComponentFactory)
+    const componentRef = hostViewContainerRef.createComponent(
+      alertComponentFactory
+    );
     componentRef.instance.message = message;
-   this.componentRefSub = componentRef.instance.close.subscribe(()=>{
-    this.componentRefSub.unsubscribe();
-    hostViewContainerRef.clear();
-    })
+    this.componentRefSub = componentRef.instance.close.subscribe(() => {
+      this.componentRefSub.unsubscribe();
+      hostViewContainerRef.clear();
+    });
   }
-  ngOnDestroy () {
-    this.componentRefSub.unsubscribe();
+  ngOnDestroy() {
+    if (this.componentRefSub) {
+      this.componentRefSub.unsubscribe();
+    }
   }
 }
