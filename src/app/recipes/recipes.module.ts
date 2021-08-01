@@ -23,13 +23,6 @@ import { RecipesRoutingModule } from './recipes-routing.module';
     RecipeStartComponent,
   ],
   imports: [CommonModule, AppRoutingModule, ReactiveFormsModule, RecipesRoutingModule],
-  exports: [
-    RecipesComponent,
-    RecipeListComponent,
-    RecipeDetailComponent,
-    RecipeItemComponent,
-    RecipeEditComponent,
-    RecipeStartComponent,
-  ],
+
 })
 export class RecipesModule {}
