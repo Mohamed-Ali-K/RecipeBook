@@ -47,4 +47,7 @@ export class AuthComponent implements OnInit {
     );
     form.reset();
   }
+  onHandelError() {
+    this.error = null!;
+  }
 }
