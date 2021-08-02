@@ -11,7 +11,7 @@ import { RecipesResolver } from './recipes.resolver';
 
 const routes: Routes = [
   {
-    path: 'recipes',
+    path: '',
     canActivate: [AuthGuard],
     component: RecipesComponent,
     children: [
